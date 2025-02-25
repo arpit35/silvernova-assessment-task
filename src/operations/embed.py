@@ -1,15 +1,17 @@
-from typing import List
-from src.api import embed_texts
 import logging
+from typing import List
+
+from src.api import embed_texts
 
 logger = logging.getLogger('embed')
 
+
 class EmbedService:
 
-  def __init__(self):
-    pass
+    def __init__(self):
+        pass
 
-  def embed(self, text: str) -> List[float]:
-    embeddings = embed_texts([text], 'document')[0]
+    def embed(self, text: str) -> List[float]:
+        embeddings = embed_texts([text], 'document')[0]
 
-    return embeddings
+        return embeddings
