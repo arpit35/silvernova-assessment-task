@@ -7,3 +7,5 @@ idna==3.10
 python-dotenv==1.0.1
 requests==2.32.3
 urllib3==2.3.0
+unstructured[pdf, docx, xlsx, md, msg]==0.16.23
+langchain==0.3.19

@@ -1,8 +1,10 @@
-from src import App
-import os
-import logging.config
 import logging
+import logging.config
+import os
+
 import dotenv
+
+from src import App
 
 dotenv.load_dotenv()
 

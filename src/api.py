@@ -7,7 +7,7 @@ BASE_URL = 'https://assessment.silvernova.ai/'
 
 # Get API_KEY from env
 API_KEY = environ.get('API_KEY')
-TIMEOUT = environ.get('TIMEOUT', 60)
+TIMEOUT = environ.get('TIMEOUT', 300)
 
 
 def execute_prompt(message: str):
