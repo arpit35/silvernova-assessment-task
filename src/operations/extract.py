@@ -3,50 +3,33 @@ import os
 import pickle
 
 from langchain.docstore.document import Document as LangchainDocument
-from unstructured.partition.pdf import partition_pdf
+
+from src.operations.utils.extract_utils.docx_utils import convert_docx_to_pdf
+from src.operations.utils.extract_utils.md_utils import extract_md_elements
+from src.operations.utils.extract_utils.msg_utils import extract_msg_elements
+from src.operations.utils.extract_utils.pdf_utils import (
+    extract_pdf_elements,
+    split_pdf_into_pages,
+)
+from src.operations.utils.extract_utils.xlsx_utils import extract_xlsx_elements
 
 logger = logging.getLogger("markdown-extractor")
 
 
 class MarkdownExtractor:
 
-    def __init__(self):
+    def __init__(self, doc_folder_path):
         logger.info("MarkdownExtractor initialized")
         # Doc Folder path
-        self.doc_folder_path = "documents/"
+        self.doc_folder_path = doc_folder_path
         self.RAW_KNOWLEDGE_BASE = []
 
-    def _extract_pdf_elements(self, path, fname):
-        return partition_pdf(
-            filename=path + fname,
-            infer_table_structure=True,
-            strategy="hi_res",
-            chunking_strategy="by_title",
-            max_characters=4000,
-            new_after_n_chars=3800,
-            combine_text_under_n_chars=2000,
-        )
-
-    def _append_to_knowledge_base(self, element, element_type):
-        element_metadata = element.metadata.to_dict()
-
-        metadata = {
-            "source": element_metadata["filename"],
-            "page_number": element_metadata["page_number"],
-            "element_type": element_type,
-        }
-
-        self.RAW_KNOWLEDGE_BASE.append(LangchainDocument(
-            page_content=str(element), metadata=metadata))
-
-    def _categorize_pdf_elements(self, raw_pdf_elements):
-        for element in raw_pdf_elements:
-            if "unstructured.documents.elements.Table" in str(type(element)):
-                self._append_to_knowledge_base(element, "table")
-            elif "unstructured.documents.elements.CompositeElement" in str(
-                type(element)
-            ):
-                self._append_to_knowledge_base(element, "text")
+    def _append_to_knowledge_base(self, elements):
+        for element in elements:
+            self.RAW_KNOWLEDGE_BASE.append(
+                LangchainDocument(
+                    page_content=element["content"], metadata=element["metadata"])
+            )
 
     def process(self):
         # Checking if folder exists
@@ -54,15 +37,31 @@ class MarkdownExtractor:
             logger.error("Folder '%s' does not exist.", self.doc_folder_path)
             return
 
-        for file in os.listdir(self.doc_folder_path):
-            if file.endswith(".pdf"):
-                self._categorize_pdf_elements(
-                    self._extract_pdf_elements(self.doc_folder_path, file))
+        for filename in os.listdir(self.doc_folder_path):
+            if filename.endswith(".pdf"):
+                pages = split_pdf_into_pages(self.doc_folder_path, filename)
+                self._append_to_knowledge_base(
+                    extract_pdf_elements(pages))
+            elif filename.endswith(".md"):
+                self._append_to_knowledge_base(
+                    extract_md_elements(self.doc_folder_path, filename))
+            elif filename.endswith(".docx"):
+                pdf_document = convert_docx_to_pdf(
+                    self.doc_folder_path, filename)
+                pages = split_pdf_into_pages(
+                    self.doc_folder_path, filename, pdf_document)
+                self._append_to_knowledge_base(
+                    extract_pdf_elements(pages))
+            elif filename.endswith(".msg"):
+                self._append_to_knowledge_base(
+                    extract_msg_elements(self.doc_folder_path, filename))
+            elif filename.endswith(".xlsx"):
+                self._append_to_knowledge_base(
+                    extract_xlsx_elements(self.doc_folder_path, filename))
 
-        print("RAW_KNOWLEDGE_BASE", self.RAW_KNOWLEDGE_BASE)
-
-    def save(self):
-        doc_file_path = os.path.join("self.doc_folder_path", "documents.pkl")
+    def save(self, knowledge_base_filename):
+        doc_file_path = os.path.join(
+            self.doc_folder_path, f"{knowledge_base_filename}.pkl")
 
         with open(doc_file_path, "wb") as f:
             pickle.dump(self.RAW_KNOWLEDGE_BASE, f)

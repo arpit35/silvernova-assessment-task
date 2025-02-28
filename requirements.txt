@@ -9,3 +9,5 @@ requests==2.32.3
 urllib3==2.3.0
 unstructured[pdf, docx, xlsx, md, msg]==0.16.23
 langchain==0.3.19
+pymupdf==1.25.3
+extract-msg==0.53.1

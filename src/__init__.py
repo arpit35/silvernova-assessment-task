@@ -11,7 +11,8 @@ class App:
     """ The main class of the application. """
 
     def __init__(self):
-        pass
+        self.doc_folder_path = "documents/"
+        self.knowledge_base_filename = "raw_knowledge_base"
 
     def run(self):
         parser = argparse.ArgumentParser(
@@ -57,8 +58,9 @@ class App:
         pass
 
     def get_markdown(self):
-        markdown_extractor = MarkdownExtractor()
+        markdown_extractor = MarkdownExtractor(self.doc_folder_path)
         markdown_extractor.process()
+        markdown_extractor.save(self.knowledge_base_filename)
 
     def ask_question(self, question):
         logging.info('Asking question: %s', question)
