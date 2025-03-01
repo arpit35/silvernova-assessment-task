@@ -1,6 +1,6 @@
 import logging
 import os
-import pickle
+from typing import List
 
 from langchain.docstore.document import Document as LangchainDocument
 
@@ -12,26 +12,27 @@ from src.operations.utils.extract_utils.pdf_utils import (
     split_pdf_into_pages,
 )
 from src.operations.utils.extract_utils.xlsx_utils import extract_xlsx_elements
+from src.operations.utils.helper import dump_pkl_file
 
 logger = logging.getLogger("markdown-extractor")
 
 
 class MarkdownExtractor:
 
-    def __init__(self, doc_folder_path):
+    def __init__(self, doc_folder_path: str) -> None:
         logger.info("MarkdownExtractor initialized")
         # Doc Folder path
         self.doc_folder_path = doc_folder_path
         self.raw_knowledge_base = []
 
-    def _append_to_knowledge_base(self, elements):
+    def _append_to_knowledge_base(self, elements: List[dict]) -> None:
         for element in elements:
             self.raw_knowledge_base.append(
                 LangchainDocument(
                     page_content=element["content"], metadata=element["metadata"])
             )
 
-    def process(self):
+    def process(self) -> None:
         # Checking if folder exists
         if not os.path.exists(self.doc_folder_path):
             logger.error("Folder '%s' does not exist.", self.doc_folder_path)
@@ -59,9 +60,6 @@ class MarkdownExtractor:
                 self._append_to_knowledge_base(
                     extract_xlsx_elements(self.doc_folder_path, filename))
 
-    def save(self, knowledge_base_filename):
-        doc_file_path = os.path.join(
-            self.doc_folder_path, f"{knowledge_base_filename}.pkl")
-
-        with open(doc_file_path, "wb") as f:
-            pickle.dump(self.raw_knowledge_base, f)
+    def save(self, knowledge_base_filename: str) -> None:
+        dump_pkl_file(self.doc_folder_path,
+                      knowledge_base_filename, self.raw_knowledge_base)

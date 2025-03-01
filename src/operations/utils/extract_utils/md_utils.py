@@ -1,9 +1,10 @@
 import os
+from typing import List
 
 from unstructured.partition.md import partition_md
 
 
-def extract_md_elements(doc_folder_path, filename):
+def extract_md_elements(doc_folder_path: str, filename: str) -> List[dict]:
     md_elements = []
 
     doc_file_path = os.path.join(doc_folder_path, filename)

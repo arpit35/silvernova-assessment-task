@@ -1,12 +1,13 @@
 import os
 import re
 from datetime import timezone
+from typing import List
 
 import extract_msg
 from bs4 import BeautifulSoup
 
 
-def find_separators(soup):
+def find_separators(soup: BeautifulSoup) -> List[BeautifulSoup]:
     outlook_separator_id_pattern = re.compile(r".*divRplyFwdMsg")
     gmail_email_pattern = re.compile(
         r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
@@ -65,7 +66,7 @@ def find_separators(soup):
     return separators
 
 
-def extract_text_from_html(email_html_content):
+def extract_text_from_html(email_html_content: str) -> str:
     email_text = BeautifulSoup(email_html_content, "html.parser").get_text(
         separator=" ", strip=True
     )
@@ -74,7 +75,7 @@ def extract_text_from_html(email_html_content):
     return None
 
 
-def extract_msg_elements(doc_folder_path, filename):
+def extract_msg_elements(doc_folder_path: str, filename: str) -> List[dict]:
     msg_elements = []
 
     msg_file_path = os.path.join(doc_folder_path, filename)

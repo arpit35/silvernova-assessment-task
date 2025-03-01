@@ -1,6 +1,9 @@
 import argparse
 import logging
 
+from rich.console import Console
+from rich.markdown import Markdown
+
 from src.operations.ask import LLMAsker
 from src.operations.embed import EmbedService
 from src.operations.extract import MarkdownExtractor
@@ -74,5 +77,6 @@ class App:
                             self.knowledge_vector_filename)
 
         response = operator.ask(question)
+        console = Console()
 
-        print(response)
+        console.print(Markdown(response))

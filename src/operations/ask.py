@@ -1,22 +1,11 @@
-import os
-import pickle
-
 from src.api import execute_prompt
+from src.operations.utils.helper import load_pkl_file
 
 
 class LLMAsker:
-    def __init__(self, doc_folder_path, knowledge_vector_filename):
-        self.knowledge_vector_database = self.load(
+    def __init__(self, doc_folder_path: str, knowledge_vector_filename: str) -> None:
+        self.knowledge_vector_database = load_pkl_file(
             doc_folder_path, knowledge_vector_filename)
-
-    def load(self, doc_folder_path, knowledge_vector_filename):
-        knowledge_vector_file_path = os.path.join(
-            doc_folder_path, f"{knowledge_vector_filename}.pkl")
-
-        with open(knowledge_vector_file_path, "rb") as f:
-            knowledge_vector_database = pickle.load(f)
-
-        return knowledge_vector_database
 
     def _get_prompt(self, context: str, question: str) -> str:
         return f"""
@@ -41,4 +30,4 @@ class LLMAsker:
         response = execute_prompt(self._get_prompt(
             [{"metadata": doc.metadata, "page_content": doc.page_content} for doc in retrieved_docs], question))
 
-        return response['response']
+        return response['response'].replace('<br>', '\n')

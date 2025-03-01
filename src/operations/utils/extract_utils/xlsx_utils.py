@@ -1,9 +1,10 @@
 import os
+from typing import List
 
 from unstructured.partition.xlsx import partition_xlsx
 
 
-def extract_xlsx_elements(doc_folder_path, filename):
+def extract_xlsx_elements(doc_folder_path: str, filename: str) -> List[dict]:
     xlsx_elements = []
     xlsx_text_elements = {}
     doc_file_path = os.path.join(doc_folder_path, filename)

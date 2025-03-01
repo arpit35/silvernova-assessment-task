@@ -1,11 +1,12 @@
 import io
 import os
+from typing import List, Optional
 
 import fitz
 from unstructured.partition.pdf import partition_pdf
 
 
-def split_pdf_into_pages(doc_folder_path, filename, pdf_document=None):
+def split_pdf_into_pages(doc_folder_path: str, filename: str, pdf_document: Optional[fitz.Document] = None) -> List[dict]:
 
     if not pdf_document:
         doc_file_path = os.path.join(doc_folder_path, filename)
@@ -29,7 +30,7 @@ def split_pdf_into_pages(doc_folder_path, filename, pdf_document=None):
     return pages
 
 
-def extract_pdf_elements(pages):
+def extract_pdf_elements(pages: List[dict]) -> List[dict]:
     pdf_elements = []
 
     for page in pages:

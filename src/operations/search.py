@@ -1,24 +1,16 @@
-import os
-import pickle
 from collections import OrderedDict
+from typing import List
+
+from src.operations.utils.helper import load_pkl_file
 
 
 class SearchEngine:
 
-    def __init__(self, doc_folder_path, knowledge_vector_filename) -> None:
-        self.knowledge_vector_database = self.load(
+    def __init__(self, doc_folder_path: str, knowledge_vector_filename: str) -> None:
+        self.knowledge_vector_database = load_pkl_file(
             doc_folder_path, knowledge_vector_filename)
 
-    def load(self, doc_folder_path, knowledge_vector_filename):
-        knowledge_vector_file_path = os.path.join(
-            doc_folder_path, f"{knowledge_vector_filename}.pkl")
-
-        with open(knowledge_vector_file_path, "rb") as f:
-            knowledge_vector_database = pickle.load(f)
-
-        return knowledge_vector_database
-
-    def search(self, query):
+    def search(self, query: str) -> List[str]:
         print(f"\nStarting retrieval for {query=}...")
         retrieved_docs = self.knowledge_vector_database.similarity_search(
             query=query, k=5)

@@ -5,7 +5,7 @@ import subprocess
 import fitz
 
 
-def convert_docx_to_pdf(doc_folder_path, filename):
+def convert_docx_to_pdf(doc_folder_path: str, filename: str) -> fitz.Document:
     doc_file_path = os.path.join(doc_folder_path, filename)
     temp_doc_folder_path = os.path.join(doc_folder_path, "temp")
     temp_doc_file_path = os.path.join(
