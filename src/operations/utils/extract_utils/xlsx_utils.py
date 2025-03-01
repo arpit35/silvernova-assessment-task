@@ -15,11 +15,11 @@ def extract_xlsx_elements(doc_folder_path, filename):
 
         if "unstructured.documents.elements.Table" in str(type(element)):
             xlsx_elements.append({"content": metadata["text_as_html"], "metadata": {
-                "source": filename, "page_name": metadata["page_name"], "page_number": metadata["page_number"]}})
+                "source": filename, "page_name": metadata["page_name"]}})
         else:
             if metadata['page_name'] not in xlsx_text_elements:
                 xlsx_text_elements[metadata['page_name']] = {"content": str(element), "metadata": {
-                    "source": filename, "page_name": metadata["page_name"], "page_number": metadata["page_number"]}}
+                    "source": filename, "page_name": metadata["page_name"]}}
             else:
                 xlsx_text_elements[metadata['page_name']
                                    ]["content"] += f"\n{str(element)}"

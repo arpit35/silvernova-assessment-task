@@ -6,7 +6,7 @@ import requests
 BASE_URL = 'https://assessment.silvernova.ai/'
 
 # Get API_KEY from env
-API_KEY = environ.get('API_KEY')
+API_KEY = environ.get('API_KEY', "2cdb0b3f-2197-4119-a0ed-0babdb129031")
 TIMEOUT = environ.get('TIMEOUT', 300)
 
 

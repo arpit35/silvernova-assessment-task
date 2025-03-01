@@ -22,11 +22,11 @@ class MarkdownExtractor:
         logger.info("MarkdownExtractor initialized")
         # Doc Folder path
         self.doc_folder_path = doc_folder_path
-        self.RAW_KNOWLEDGE_BASE = []
+        self.raw_knowledge_base = []
 
     def _append_to_knowledge_base(self, elements):
         for element in elements:
-            self.RAW_KNOWLEDGE_BASE.append(
+            self.raw_knowledge_base.append(
                 LangchainDocument(
                     page_content=element["content"], metadata=element["metadata"])
             )
@@ -64,8 +64,4 @@ class MarkdownExtractor:
             self.doc_folder_path, f"{knowledge_base_filename}.pkl")
 
         with open(doc_file_path, "wb") as f:
-            pickle.dump(self.RAW_KNOWLEDGE_BASE, f)
-
-        # # Load from file
-        # with open("documents.pkl", "rb") as f:
-        #     docs = pickle.load(f)
+            pickle.dump(self.raw_knowledge_base, f)

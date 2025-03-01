@@ -6,6 +6,8 @@ from src.operations.embed import EmbedService
 from src.operations.extract import MarkdownExtractor
 from src.operations.search import SearchEngine
 
+logger = logging.getLogger('init')
+
 
 class App:
     """ The main class of the application. """
@@ -13,6 +15,7 @@ class App:
     def __init__(self):
         self.doc_folder_path = "documents/"
         self.knowledge_base_filename = "raw_knowledge_base"
+        self.knowledge_vector_filename = "knowledge_vector_database"
 
     def run(self):
         parser = argparse.ArgumentParser(
@@ -28,7 +31,7 @@ class App:
 
         args = parser.parse_args()
 
-        if args.mode == 'load-files':
+        if args.mode == 'index-files':
             self.load_files()
         elif args.mode == 'ask-question':
             question = args.question
@@ -46,16 +49,18 @@ class App:
             self.get_markdown()
 
     def load_files(self):
-        # ToDo: Load the files and index them in a db of your choosing for the rag
-
-        operator = EmbedService()
-        operator.embed('This is a test')
-
-        # ...
+        embed_service = EmbedService(self.doc_folder_path,
+                                     self.knowledge_base_filename)
+        embed_service.embed()
+        embed_service.save(self.knowledge_vector_filename)
 
     def search(self, query):
         # ToDo: Search the indexed files for results matching your query
-        pass
+        search_engine = SearchEngine(self.doc_folder_path,
+                                     self.knowledge_vector_filename)
+        response = search_engine.search(query)
+
+        print(response)
 
     def get_markdown(self):
         markdown_extractor = MarkdownExtractor(self.doc_folder_path)
@@ -65,7 +70,8 @@ class App:
     def ask_question(self, question):
         logging.info('Asking question: %s', question)
 
-        operator = LLMAsker()
+        operator = LLMAsker(self.doc_folder_path,
+                            self.knowledge_vector_filename)
 
         response = operator.ask(question)
 
