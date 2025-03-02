@@ -12,15 +12,15 @@ from src.operations.utils.extract_utils.pdf_utils import (
     split_pdf_into_pages,
 )
 from src.operations.utils.extract_utils.xlsx_utils import extract_xlsx_elements
-from src.operations.utils.helper import dump_pkl_file
+from src.operations.utils.helper import dump_pkl_file, progress_bar
 
-logger = logging.getLogger("markdown-extractor")
+logger = logging.getLogger(__name__)
 
 
 class MarkdownExtractor:
 
     def __init__(self, doc_folder_path: str) -> None:
-        logger.info("MarkdownExtractor initialized")
+        logger.info("Markdown Extractor initialized")
         # Doc Folder path
         self.doc_folder_path = doc_folder_path
         self.raw_knowledge_base = []
@@ -38,7 +38,8 @@ class MarkdownExtractor:
             logger.error("Folder '%s' does not exist.", self.doc_folder_path)
             return
 
-        for filename in os.listdir(self.doc_folder_path):
+        logger.info("Processing files in folder '%s'", self.doc_folder_path)
+        for filename in progress_bar(os.listdir(self.doc_folder_path), desc="Processing files"):
             if filename.endswith(".pdf"):
                 pages = split_pdf_into_pages(self.doc_folder_path, filename)
                 self._append_to_knowledge_base(
@@ -60,6 +61,8 @@ class MarkdownExtractor:
                 self._append_to_knowledge_base(
                     extract_xlsx_elements(self.doc_folder_path, filename))
 
-    def save(self, knowledge_base_filename: str) -> None:
+    def save(self, knowledge_base_filename: str) -> str:
         dump_pkl_file(self.doc_folder_path,
                       knowledge_base_filename, self.raw_knowledge_base)
+
+        return "\n## Knowledge Base Successfully created and saved to disk\n"

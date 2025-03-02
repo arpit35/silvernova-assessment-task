@@ -14,3 +14,4 @@ pymupdf==1.25.3
 extract-msg==0.53.1
 faiss-cpu==1.10.0
 rich==13.9.4
+ragatouille==0.0.9

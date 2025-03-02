@@ -1,5 +1,5 @@
 import argparse
-import logging
+from os import environ
 
 from rich.console import Console
 from rich.markdown import Markdown
@@ -9,16 +9,18 @@ from src.operations.embed import EmbedService
 from src.operations.extract import MarkdownExtractor
 from src.operations.search import SearchEngine
 
-logger = logging.getLogger('init')
+console = Console()
 
 
 class App:
     """ The main class of the application. """
 
     def __init__(self):
-        self.doc_folder_path = "documents/"
-        self.knowledge_base_filename = "raw_knowledge_base"
-        self.knowledge_vector_filename = "knowledge_vector_database"
+        self.doc_folder_path = environ.get("DOC_FOLDER_PATH", "documents/")
+        self.knowledge_base_filename = environ.get(
+            "KNOWLEDGE_BASE_FILENAME", "raw_knowledge_base")
+        self.knowledge_vector_filename = environ.get(
+            "KNOWLEDGE_VECTOR_FILENAME", "knowledge_vector_database")
 
     def run(self):
         parser = argparse.ArgumentParser(
@@ -55,28 +57,29 @@ class App:
         embed_service = EmbedService(self.doc_folder_path,
                                      self.knowledge_base_filename)
         embed_service.embed()
-        embed_service.save(self.knowledge_vector_filename)
+
+        response = embed_service.save(self.knowledge_vector_filename)
+
+        console.print(Markdown(response))
 
     def search(self, query):
-        # ToDo: Search the indexed files for results matching your query
         search_engine = SearchEngine(self.doc_folder_path,
                                      self.knowledge_vector_filename)
         response = search_engine.search(query)
 
-        print(response)
+        console.print(Markdown(response))
 
     def get_markdown(self):
         markdown_extractor = MarkdownExtractor(self.doc_folder_path)
         markdown_extractor.process()
-        markdown_extractor.save(self.knowledge_base_filename)
+
+        response = markdown_extractor.save(self.knowledge_base_filename)
+
+        console.print(Markdown(response))
 
     def ask_question(self, question):
-        logging.info('Asking question: %s', question)
-
         operator = LLMAsker(self.doc_folder_path,
                             self.knowledge_vector_filename)
-
         response = operator.ask(question)
-        console = Console()
 
         console.print(Markdown(response))

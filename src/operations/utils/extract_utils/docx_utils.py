@@ -11,7 +11,10 @@ def convert_docx_to_pdf(doc_folder_path: str, filename: str) -> fitz.Document:
     temp_doc_file_path = os.path.join(
         temp_doc_folder_path, os.path.splitext(filename)[0] + '.pdf')
 
-    # Convert DOCX to PDF (LibreOffice will use the same base name as the DOCX)
+    # Ensure temp folder exists
+    os.makedirs(temp_doc_folder_path, exist_ok=True)
+
+    # Convert DOCX to PDF and suppress output
     command = [
         'libreoffice',
         '--headless',
@@ -19,7 +22,9 @@ def convert_docx_to_pdf(doc_folder_path: str, filename: str) -> fitz.Document:
         doc_file_path,
         '--outdir', temp_doc_folder_path
     ]
-    subprocess.run(command, check=True)
+
+    subprocess.run(command, check=True, stdout=subprocess.DEVNULL,
+                   stderr=subprocess.DEVNULL)
 
     pdf_document = fitz.open(temp_doc_file_path)
 

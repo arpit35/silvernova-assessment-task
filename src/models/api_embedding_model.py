@@ -1,9 +1,9 @@
 from typing import List, Literal
 
 from langchain_core.embeddings import Embeddings
-from tqdm import tqdm
 
 from src.api import embed_texts
+from src.operations.utils.helper import progress_bar
 
 
 class APIEmbeddingModel(Embeddings):
@@ -16,7 +16,12 @@ class APIEmbeddingModel(Embeddings):
 
         embeddings = []
 
-        for i in tqdm(range(0, len(texts), 10)):
+        if input_type == "document":
+            progress_bar_desc = "Embedding documents"
+        else:
+            progress_bar_desc = "Embedding queries"
+
+        for i in progress_bar(range(0, len(texts), 10), desc=progress_bar_desc):
             embeddings.extend(embed_texts(
                 texts[i:i+10], input_type)["embeddings"])
 

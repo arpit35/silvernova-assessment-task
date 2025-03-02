@@ -3,11 +3,11 @@ from typing import List, Literal
 
 import requests
 
-BASE_URL = 'https://assessment.silvernova.ai/'
+BASE_URL = environ.get('BASE_URL', 'https://assessment.silvernova.ai/')
 
 # Get API_KEY from env
-API_KEY = environ.get('API_KEY', "2cdb0b3f-2197-4119-a0ed-0babdb129031")
-TIMEOUT = environ.get('TIMEOUT', 300)
+API_KEY = environ.get('API_KEY')
+TIMEOUT = int(environ.get('TIMEOUT', 60))
 
 
 def execute_prompt(message: str):
