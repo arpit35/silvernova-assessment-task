@@ -9,15 +9,24 @@ warnings.filterwarnings("ignore")
 
 dotenv.load_dotenv()
 
-log_file_path = os.path.join(os.path.dirname(__file__), 'logging.conf')
+log_file_path = os.path.join(os.path.dirname(__file__), "logging.conf")
 
 logging.config.fileConfig(log_file_path, disable_existing_loggers=False)
-logger = logging.getLogger('root')
+logger = logging.getLogger("root")
 
 
 class LoggerFilter(logging.Filter):
-    blocked_loggers = {'faiss', 'datasets', 'unstructured',
-                       'timm', 'pikepdf', 'tzlocal', 'extract_msg', 'colbert'}
+    blocked_loggers = {
+        "faiss",
+        "datasets",
+        "unstructured",
+        "timm",
+        "pikepdf",
+        "tzlocal",
+        "extract_msg",
+        "colbert",
+        "matplotlib",
+    }
 
     def filter(self, record: logging.LogRecord) -> bool:
         return not any(blocked in record.name for blocked in self.blocked_loggers)
@@ -27,7 +36,7 @@ class LoggerFilter(logging.Filter):
 for handler in logger.handlers:
     handler.addFilter(LoggerFilter())
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from src import App
 
     app = App()

@@ -12,11 +12,11 @@ When working on this task either
 
 Try to answer as thruthfully as possible.
 
-| Name                     | xxxxx        |
-|--------------------------|--------------|
-| E-Mail:                  | xxxxx@xxx.xx |
-| Approx. Time To Complete | xx hours     |
-| My github:               | xxxxxxx      |
+| Name                     | Arpit Kuamr Pandey          |
+|--------------------------|-----------------------------|
+| E-Mail:                  | arpitpandey351999@gamil.com |
+| Approx. Time To Complete | 50 hours                    |
+| My github:               | https://github.com/arpit35  |
 
 ## The task
 
@@ -47,7 +47,36 @@ You can find the OpenAPI specification here: [OpenAPI Specification](https://ass
 
 You have to authenticate at the API. Use your assigned **API Key** for that purpose. Put it into a `.env` file located in the root of the project.
 
-## Run
+---
+
+## 🚀 Setup & Usage Guide
+
+### **📦 Prerequisites**
+
+Ensure you have the following installed on your system:
+
+- Docker
+
+- Docker Compose
+
+### **1️⃣ Build the Docker Image**
+Navigate to the project directory and build the Docker image using:
+
+```bash
+docker-compose up -d
+```
+
+### **2️⃣ Access the Running Container**
+Once the container is up, you can access it via an interactive shell:
+
+```bash
+docker-compose exec app /bin/bash
+```
+
+
+### **🛠 Running the Application**
+After entering the container, you can run the associate script in different modes:
+
 ```bash
 # Get the file's content as markdown
 ./associate --mode=get-markdown
@@ -60,4 +89,18 @@ You have to authenticate at the API. Use your assigned **API Key** for that purp
 
 # Ask a question about the documents
 ./associate "[question]"
+```
+
+### **🧪 Running Tests**
+You can run the test cases using pytest as follows:
+
+**Run tests from your host machine:**
+
+```bash
+docker-compose exec app pytest
+```
+
+**Run tests from inside the Docker container:**
+```bash
+pytest
 ```
