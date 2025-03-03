@@ -15,7 +15,7 @@ Try to answer as thruthfully as possible.
 | Name                     | Arpit Kuamr Pandey          |
 |--------------------------|-----------------------------|
 | E-Mail:                  | arpitpandey351999@gamil.com |
-| Approx. Time To Complete | 50 hours                    |
+| Approx. Time To Complete | 40 hours                    |
 | My github:               | https://github.com/arpit35  |
 
 ## The task
