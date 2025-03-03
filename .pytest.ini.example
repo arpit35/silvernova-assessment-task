@@ -1,0 +1,25 @@
+[pytest]
+env =
+    # <YOUR_API_KEY> - You need to provide your API key here
+    API_KEY=<YOUR_API_KEY>
+
+    # Default base URL for the API
+    BASE_URL=https://assessment.silvernova.ai/
+
+    # Default timeout value in seconds
+    TIMEOUT=60
+
+    # Default folder path for documents
+    DOC_FOLDER_PATH=documents/
+
+    # Default filename for the raw knowledge base
+    KNOWLEDGE_BASE_FILENAME=raw_knowledge_base
+
+    # Default filename for the knowledge vector database
+    KNOWLEDGE_VECTOR_FILENAME=knowledge_vector_database
+
+    # Default number of documents to fetch
+    FETCHED_DOC_COUNT=15
+
+    # Default number of documents to rerank
+    RERANKED_DOC_COUNT=3
